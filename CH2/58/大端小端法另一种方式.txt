@@ -1,0 +1,5 @@
+char endian()
+{
+unsigned ui = ~0 - 1;  
+return  ((*(unsigned char *)&ui==0xfe) ? 'L' : 'B');
+} 
