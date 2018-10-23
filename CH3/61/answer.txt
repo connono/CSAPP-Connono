@@ -1,0 +1,10 @@
+long cread(long *xp){
+	return (xp ? *xp : 0);
+}
+因为给出的抽象代码会对then-expr和else-expr都求值
+
+long *cread_alt(long *xp){
+	int t = 0;
+	long *p = xp?*xp:&t;
+	return p;
+}

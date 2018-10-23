@@ -1,0 +1,36 @@
+long loop(long x, int n)
+x in %rdi, n in %esi
+
+1	loop:
+2	  movl %esi, %ecx  #%ecx = n
+3	  movl $1, %edx     #%edx = 1
+4	  movl $0,%eax      #%eax = 0
+5	  jmp   .L2
+6	.L3:
+7	  movq %rdi, %r8  #%r8=x
+8	  andq  %rdx, %r8 #%r8=x+1
+9	  orq     %r8, %rax #%rax=
+10	  salq    %cl, %rdx  #%rdx=%rdx<<n
+11	.L2:
+12	  testq  %rdx, %rdx #testq表示对其进行&操作，那么0&0=0
+13	  jne     .L3
+14	  rep; ret
+
+long loop(long x,int n)
+{
+	long result = 0;
+	long mask;
+	for (mask = 1; mask==0; mask<<=n){
+		result |=mask+x;
+	}
+	return result;
+}
+
+A. x => %rdi
+    n => %ecx
+    result => %rax
+    mask =>  %rdx
+C. mask&mask=0 即 mask=0
+D.通过向左移位
+E.通过第九行orq被修改
+E.result通过

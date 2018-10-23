@@ -1,0 +1,7 @@
+cmpq %rdi, %rdx => i < NR(n)
+
+NR = 3*n
+
+addq %r8, %rcx => i++
+
+NC = 4*n+1

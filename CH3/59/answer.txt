@@ -1,0 +1,37 @@
+cltq R[%rax] <- SignExtend(R[%eax])
+cqto R[%rdx]:R[%rax] <- SignExtend(R[%rax])
+mulq R[%rdx]:R[%rax] < S*R[%rax]
+
+typedef __int128 int128_t;
+
+void store_prod(int128_t *dest, int64_t. int64_y){
+	*dest = x * (int128_t) y;
+}
+
+
+store_prod:
+1  movq %rdx, %rax  #将y的值从%rdx传到%rax    
+2  cqto #将y扩位为128位  
+3  movq %rsi, %rcx  #将x的值取出
+4  sarq $63,%rcx #将x算术右移63位，得到符号
+5  imulq %rax, %rcx #y低位部分与x符号位相乘 
+6  imulq %rsi, %rdx #x与高位部分相乘
+7  addq %rdx, %rcx #y高位部分与结果相加，并储存在 %rcx 
+8  mulq %rsi	#x与y低位相乘的结果储存在%rax和%rdx中 
+9  addq %rcx, %rdx  
+10  movq %rax, (%rdi)  #存储低位结果
+11  movq %rdx, 8(%rdi) #存储高位结果
+12  ret
+
+	x>0,y>0		x>0,y<0				x<0,y>0			x<0,y<0
+1	%rax = y		%rax = (2^64+y)			%rax = y			%rax = (2^64+y)
+2	%rdx = 0,%rax=y	%rdx = (2^64-1), %rax = (2^64+y)	%rdx = 0, %rax=y		%rdx = (2^64-1),%rax=(2^64+y)
+3	%rcx = x		%rcx = x				%rcx = (2^64+x)		%rcx = (2^64+x)
+4	%rcx = 0		%rcx = 0				%rcx = (2^64-1)		%rcx = (2^64-1)
+5	%rcx = 0		%rcx = 0				%rcx = -y			%rcx = -y
+6	%rdx = 0		%rdx = -x				%rdx = 0			%rdx = -x
+7	%rcx = 0		%rcx = -x				%rcx = -y			%rcx = -(y+x)
+8	%rdx:%rax = x*y	%rdx:%rax = (2^64+y)*x		%rdx:%rax = (2^64+x)*y	%rdx:%rax = (2^64+x)*(2^64+y)
+9	%rdx = %rdx	%rdx = %rdx + %rcx		%rdx = %rdx + %rcx	%rdx = %rdx + %rcx
+补码表示	x*y		x*y				x*y			x*y
+得证

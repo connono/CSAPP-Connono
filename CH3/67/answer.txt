@@ -1,0 +1,21 @@
+A.
+eval的栈帧
+%rsp		x
+%rsp+8		y
+%rsp+16		%rsp+24
+%rsp+24		z
+%rsp+64		z
+%rsp+72
+%rsp+80
+%rsp+104
+
+B.
+传递了%rdi中的值，为%rsp+64
+
+C.
+通过栈的偏移地址查询到结构参数s的元素
+还有通过指针的应用找到z的位置
+movq 16(%rsp), %rcx
+movq %rcx, (%rdi)
+
+D.
