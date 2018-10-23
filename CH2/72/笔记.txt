@@ -1,0 +1,4 @@
+printf在打印输出时会对数据进行隐式的强制类型转换
+如用%d打印无符号数时会将其先强制转换为有符号数
+
+size_t是一种unsigned_int 所以与int加减会往宽的地方转换，因此int被转换成unsigned_int
